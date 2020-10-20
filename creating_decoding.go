@@ -21,13 +21,11 @@ func main() {
     // your byte source could be anything. If any of the packets
     // come back as nil, that means it could not decode it in to
     // the proper layer (malformed or incorrect packet type)
-    payload := []byte{2, 4, 6}
+    payload := []byte{7, 7, 6, 3, 1, 2, 4, 3, 2, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0}
     options := gopacket.SerializeOptions{}
     buffer := gopacket.NewSerializeBuffer()
     gopacket.SerializeLayers(buffer, options,
         &layers.Ethernet{},
-        &layers.IPv4{},
-        &layers.TCP{},
         gopacket.Payload(payload),
     )
     rawBytes := buffer.Bytes()
@@ -40,26 +38,5 @@ func main() {
             gopacket.Default,
         )
 
-    // with Lazy decoding it will only decode what it needs when it needs it
-    // This is not concurrency safe. If using concurrency, use default
-    ipPacket :=
-        gopacket.NewPacket(
-            rawBytes,
-            layers.LayerTypeIPv4,
-            gopacket.Lazy,
-        )
-
-    // With the NoCopy option, the underlying slices are referenced
-    // directly and not copied. If the underlying bytes change so will
-    // the packet
-    tcpPacket :=
-        gopacket.NewPacket(
-            rawBytes,
-            layers.LayerTypeTCP,
-            gopacket.NoCopy,
-        )
-
     fmt.Println(ethPacket)
-    fmt.Println(ipPacket)
-    fmt.Println(tcpPacket)
 }
