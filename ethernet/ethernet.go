@@ -8,17 +8,21 @@ import (
 	"github.com/mdlayher/ethernet"
 )
 
-const etherType ethernet.EtherType = 0xcccc
-const broadcast net.HardwareAddr = []byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
+const EtherType ethernet.EtherType = 0xcccc
 
-type addr net.HardwareAddr
+var Broadcast net.HardwareAddr = []byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
+
+type Addr net.HardwareAddr
+
+func (Addr) Network() string { return "ethernet" }
+func (Addr) String() string { return string(Broadcast) }
 
 func send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, msg string) {
 	// Message is broadcast to all machines in same network segment.
 	f := &ethernet.Frame{
 		Destination: ethernet.Broadcast,
 		Source:      source,
-		EtherType:   etherType,
+		EtherType:   EtherType,
 		Payload:     []byte(msg),
 	}
 
@@ -27,9 +31,8 @@ func send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, m
 		log.Fatalf("failed to marshal ethernet frame: %v", err)
 	}
 
-	addr := &raw.Addr{
-		HardwareAddr: ethernet.Broadcast,
-	}
+	// Destination address
+	addr := Addr(dest)
 
 	// Send message forever.
 	t := time.NewTicker(1 * time.Second)
@@ -40,12 +43,12 @@ func send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, m
 	}
 }
 
-func sendToAll(conn net.PacketConn, source net.HardwareAddr, etherType int, msg string) {
+func sendToAll(conn net.PacketConn, source net.HardwareAddr, msg string) {
 	// Message is broadcast to all machines in same network segment.
 	f := &ethernet.Frame{
 		Destination: ethernet.Broadcast,
 		Source:      source,
-		EtherType:   etherType,
+		EtherType:   EtherType,
 		Payload:     []byte(msg),
 	}
 
@@ -56,7 +59,8 @@ func sendToAll(conn net.PacketConn, source net.HardwareAddr, etherType int, msg 
 
 	// Required by Linux, even though the Ethernet frame has a destination.
 	// Unused by BSD.
-	addr := addr{Broadcast}
+	addr := Addr(Broadcast)
+
 	// Send message forever.
 	t := time.NewTicker(1 * time.Second)
 	for range t.C {
