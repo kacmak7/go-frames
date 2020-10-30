@@ -2,6 +2,7 @@ package ethernet
 
 import (
 	"github.com/mdlayher/ethernet"
+	"github.com/mdlayher/raw"
 	"log"
 	"net"
 )
@@ -29,8 +30,11 @@ func Send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, m
 		log.Fatalf("Failed to marshal ethernet frame: %v", err)
 	}
 
-	// Destination address
-	addr := Addr(dest)
+	// Required by Linux, even though the Ethernet frame has a destination.
+	// Unused by BSD.
+	addr := &raw.Addr{
+		HardwareAddr: dest,
+	}
 
 	if _, err := conn.WriteTo(b, addr); err != nil {
 		log.Fatalf("Failed to send message: %v", err)
