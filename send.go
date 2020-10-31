@@ -1,7 +1,6 @@
 package main
 
 import (
-
 	"github.com/kacmak7/go-p2p-packets/ethernet"
 	"github.com/mdlayher/raw"
 	"log"
@@ -10,7 +9,7 @@ import (
 
 const (
 	INTERFACE = "enp39s0"
-	ETHER = 0xcccc
+	ETHER = 0x22F0
 )
 
 var dest net.HardwareAddr = []byte{0x30, 0x9c, 0x23, 0x0e, 0x1a, 0x00}
