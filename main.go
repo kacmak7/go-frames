@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"github.com/akamensky/argparse"
 	"github.com/kacmak7/go-p2p-packets/sender"
 	"github.com/kacmak7/go-p2p-packets/receiver"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -50,8 +52,11 @@ func main() {
 	}
 
 	if sendCmd.Happened() {
-		// TODO parse destFlag
-		sender.SendMsg(conn, *destFlag, ifi.HardwareAddr, *msgFlag)
+		dest, err := hex.DecodeString(strings.Replace(*destFlag, ":", "", -1))
+		if err != nil {
+			log.Fatal("Destination MAC address formatting error")
+		}
+		sender.SendMsg(conn, dest, ifi.HardwareAddr, *msgFlag)
 	} else if receiveCmd.Happened() {
 		receiver.ReceiveAndProcess(conn)
 	}
