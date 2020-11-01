@@ -10,7 +10,7 @@ import (
 const MTU int = 800
 
 // Receives and processes messages sent from other nodes
-func receiveAndProcess(c net.PacketConn) {
+func ReceiveAndProcess(c net.PacketConn) {
 	var f ethernet.Frame
 	b := make([]byte, MTU)
 
@@ -27,8 +27,7 @@ func receiveAndProcess(c net.PacketConn) {
 			log.Fatalf("failed to unmarshal ethernet frame: %v", err)
 		}
 
-		// TODO stream ?
-		// Display source of message and message itself.
+		// TODO save to temp files
 		log.Printf("[%s] %s", addr.String(), string(f.Payload))
 	}
 }

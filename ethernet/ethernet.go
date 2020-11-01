@@ -8,6 +8,9 @@ import (
 // The only EtherType used here
 const EtherType ethernet.EtherType = 0x1234
 
+// Ping message
+const PingMsg string = "/ping"
+
 var Broadcast net.HardwareAddr = []byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
 
 // TODO ADDR

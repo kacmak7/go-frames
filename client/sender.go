@@ -8,8 +8,8 @@ import (
 	"net"
 )
 
-// sends message frame to the another node
-func Send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, ether ethernet.EtherType, msg string) {
+// sends frame
+func send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, ether ethernet.EtherType, msg string) {
 	f := &ethernet.Frame{
 		Destination: dest,
 		Source:      source,
@@ -31,7 +31,17 @@ func Send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, e
 	}
 }
 
+// Sends ping and waits for pong
+func ping(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, msg string) {
+	send(conn, dest, source, protocol.EtherType, protocol.PingMsg)
+}
+
+func SendMsg(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, msg string) {
+	send(conn, dest, source, protocol.EtherType, msg)
+}
+
 // scans network for available listening devices
+// scanning
 func Scan(conn net.PacketConn, source net.HardwareAddr) {
-	Send(conn, ethernet.Broadcast, source, protocol.EtherType,"scanning")
+	send(conn, ethernet.Broadcast, source, protocol.EtherType,"")
 }
