@@ -24,7 +24,7 @@ func ReceiveAndProcess(c net.PacketConn) {
 		// Process stage
 		// Unpack Ethernet II frame into Go representation.
 		if err := (&f).UnmarshalBinary(b[:n]); err != nil {
-			log.Fatalf("failed to unmarshal ethernet frame: %v", err)
+			log.Fatalf("failed to unmarshal protocol frame: %v", err)
 		}
 
 		// TODO save to temp files

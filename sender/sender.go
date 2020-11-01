@@ -1,7 +1,7 @@
 package sender
 
 import (
-	protocol "github.com/kacmak7/go-p2p-packets/ethernet"
+	"github.com/kacmak7/go-p2p-packets/protocol"
 	"github.com/mdlayher/ethernet"
 	"github.com/mdlayher/raw" // TODO
 	"log"
@@ -19,7 +19,7 @@ func send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, e
 
 	b, err := f.MarshalBinary()
 	if err != nil {
-		log.Fatalf("Failed to marshal ethernet frame: %v", err)
+		log.Fatalf("Failed to marshal protocol frame: %v", err)
 	}
 
 	addr := &raw.Addr{ // TODO change
@@ -31,17 +31,12 @@ func send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, e
 	}
 }
 
-// Sends ping and waits for pong
-func ping(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, msg string) {
-	send(conn, dest, source, protocol.EtherType, protocol.PingMsg)
-}
-
+// sends message and waits for the confirmation
 func SendMsg(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, msg string) {
 	send(conn, dest, source, protocol.EtherType, msg)
 }
 
 // scans network for available listening devices
-// scanning
 func Scan(conn net.PacketConn, source net.HardwareAddr) {
 	send(conn, ethernet.Broadcast, source, protocol.EtherType,"")
 }
