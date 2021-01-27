@@ -45,7 +45,6 @@ func main() {
 	log.Printf("Using %v", inter)
 
 	// Setup connection
-	// TODO get rid of raw
 	conn, err := raw.ListenPacket(ifi, 0x1234, nil) // TODO protocol.EtherType type
 	if err != nil {
 		log.Fatal("Connection setup error")

@@ -10,8 +10,12 @@ const EtherType ethernet.EtherType = 0x1234
 
 var Broadcast net.HardwareAddr = []byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
 
-// TODO ADDR
-type Addr net.HardwareAddr // TODO whats with this Addr ??
+// Address implementation
+type Addr struct {
+	HardwareAddr net.HardwareAddr
+}
 
-func (Addr) Network() string { return "protocol" }
-func (Addr) String() string { return string(Broadcast) }
+func (a *Addr) Network() string {return "frames"}
+
+func (a *Addr) String() string {return a.HardwareAddr.String()}
+

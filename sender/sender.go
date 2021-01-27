@@ -3,7 +3,6 @@ package sender
 import (
 	"github.com/kacmak7/go-p2p-packets/protocol"
 	"github.com/mdlayher/ethernet"
-	"github.com/mdlayher/raw" // TODO
 	"log"
 	"net"
 )
@@ -22,7 +21,7 @@ func send(conn net.PacketConn, dest net.HardwareAddr, source net.HardwareAddr, e
 		log.Fatalf("Failed to marshal protocol frame: %v", err)
 	}
 
-	addr := &raw.Addr{ // TODO change
+	addr := &protocol.Addr{
 		HardwareAddr: dest,
 	}
 
